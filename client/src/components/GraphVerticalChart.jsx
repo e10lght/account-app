@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card } from "@mui/material";
 import {
     Chart as ChartJS,

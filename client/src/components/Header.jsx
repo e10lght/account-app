@@ -49,9 +49,9 @@ export const Header = () => {
                         top: isFullWidth ? "64px" : "56px",
                     },
                 }}
-                variant="persistent"
                 anchor="left"
                 open={isOpen}
+                onClose={toggleOpenState}
             >
                 <Toolbar />
                 <Box sx={{ overflow: "auto" }}>
