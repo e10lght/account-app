@@ -19,14 +19,15 @@ app.use(express.json());
 // Reactアプリケーションのビルドディレクトリを指定します。
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.use('/api', Router)
-
 // すべてのリクエストをReactアプリケーションにルーティングします。
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 // });
 
+app.use('/api', Router)
+
 
 app.listen(PORT, () => {
+    console.log(path.join(__dirname, '../client/build', 'index.html'))
     console.log('起動しました')
 })
