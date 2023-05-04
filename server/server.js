@@ -26,7 +26,6 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.use('/api', Router)
 
-
 app.listen(PORT, () => {
     console.log(path.join(__dirname, '../client/build', 'index.html'))
     console.log('起動しました')
