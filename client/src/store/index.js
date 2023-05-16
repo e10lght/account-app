@@ -11,21 +11,22 @@ import spendDeleteReducer from './spendDeleteReducer';
 import spendingReducer from './spendingReducer';
 import spendMonthlyReducer from './spendMonthlyReducer';
 
-const store = configureStore({
+const store = configureStore(
+  {
     reducer: {
-        income: incomeReducer,
-        spending: spendingReducer,
-        incomeAdd: incomeAddReducer,
-        incomeDelete: incomeDeleteReducer,
-        incomeCategory: incomeCategoryReducer,
-        incomeMonthly: incomeMonthlyReducer,
-        spendAdd: spendAddReducer,
-        spendCategory: spendCategoryReducer,
-        spendDelete: spendDeleteReducer,
-        spendMonthly: spendMonthlyReducer
+      income: incomeReducer,
+      spending: spendingReducer,
+      incomeAdd: incomeAddReducer,
+      incomeDelete: incomeDeleteReducer,
+      incomeCategory: incomeCategoryReducer,
+      incomeMonthly: incomeMonthlyReducer,
+      spendAdd: spendAddReducer,
+      spendCategory: spendCategoryReducer,
+      spendDelete: spendDeleteReducer,
+      spendMonthly: spendMonthlyReducer,
     },
-},
-    applyMiddleware(thunk)
+  },
+  applyMiddleware(thunk),
 );
 
 export default store;
