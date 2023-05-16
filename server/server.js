@@ -16,15 +16,16 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+app.use('/api', Router);
+
 // Reactアプリケーションのビルドディレクトリを指定します。
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, '/client/build')));
 
 // すべてのリクエストをReactアプリケーションにルーティングします。
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
+});
 
-app.use('/api', Router);
 
 app.listen(PORT, () => {
   console.log(path.join(__dirname, '../client/build', 'index.html'));
