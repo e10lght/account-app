@@ -1,30 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { Card, CardContent, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import dayjs from 'dayjs';
-import { spendMonthlyReducer } from '../store/spendMonthlyReducer';
 import { spendCategoryReducer } from '../store/spendCategory';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-);
 
 export const SpendPieChart = (props) => {
   const { dataList } = props;
@@ -32,13 +10,8 @@ export const SpendPieChart = (props) => {
   const dispatch = useDispatch();
   const { spendMonthly = {} } =
     useSelector((state) => state.spendMonthly) || {};
-  console.log(spendMonthly);
 
   const fetchData = async () => {
-    // const date = dayjs.tz().format('YYYY-MM-DD');
-    // const response = await dispatch(spendMonthlyReducer(date));
-    // const data2 = response.payload;
-    // console.log(data2)
     // カテゴリ数を取得し、それぞれの合計を配列に格納する
     const responseCategory = await dispatch(spendCategoryReducer());
     const categories = responseCategory.payload;
@@ -49,7 +22,6 @@ export const SpendPieChart = (props) => {
     // カテゴリ別に合計の金額を集計する
     const result = categories.map((category) => {
       let count = 0;
-      console.log(dataList);
       for (const incomeRecord of dataList) {
         if (category.id === incomeRecord.spending_category_id) {
           count += incomeRecord.spending_amount;
@@ -57,7 +29,10 @@ export const SpendPieChart = (props) => {
       }
       return count;
     });
-    setMonthlySpend({ result, categoryNameList });
+    setMonthlySpend({
+      result,
+      categoryNameList,
+    });
   };
 
   useEffect(() => {

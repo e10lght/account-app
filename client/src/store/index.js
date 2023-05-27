@@ -8,14 +8,14 @@ import incomeReducer from './incomeReducer';
 import spendAddReducer from './spendAddReducer';
 import spendCategoryReducer from './spendCategory';
 import spendDeleteReducer from './spendDeleteReducer';
-import spendingReducer from './spendingReducer';
+import spendReducer from './spendReducer';
 import spendMonthlyReducer from './spendMonthlyReducer';
 
 const store = configureStore(
   {
     reducer: {
       income: incomeReducer,
-      spending: spendingReducer,
+      spend: spendReducer,
       incomeAdd: incomeAddReducer,
       incomeDelete: incomeDeleteReducer,
       incomeCategory: incomeCategoryReducer,

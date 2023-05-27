@@ -1,11 +1,15 @@
 import React from 'react';
 import { Card } from '@mui/material';
-import { Bar } from 'react-chartjs-2';
+import 'chart.js/auto';
+import { Line } from 'react-chartjs-2';
+import { useDispatch } from 'react-redux';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { spendMonthlyReducer } from '../store/spendMonthlyReducer';
 import { Utils } from '../utils/utils';
 
-export const SpendVerticalChart = (props) => {
-  const { spend } = props;
+export const SpendAreaChart = (props) => {
+  const { text, label, spend, bc, bgc } = props;
   const [monthlySpend, setMonthlySpend] = useState([]);
   const [dataLabels, setDataLabels] = useState();
 
@@ -25,7 +29,7 @@ export const SpendVerticalChart = (props) => {
       },
       title: {
         display: true,
-        text: '月次支出',
+        text: text,
       },
     },
   };
@@ -34,16 +38,18 @@ export const SpendVerticalChart = (props) => {
     labels: dataLabels,
     datasets: [
       {
-        label: '月ごとの支出額',
+        fill: true,
+        label: label,
         data: monthlySpend,
-        backgroundColor: 'rgba(0,122,196, 0.5)',
+        borderColor: bc,
+        backgroundColor: bgc,
       },
     ],
   };
 
   return (
     <Card style={{ margin: 10 }}>
-      <Bar options={options} data={data} />
+      <Line options={options} data={data} />
     </Card>
   );
 };

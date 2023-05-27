@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
-import { spendingReducer } from '../store/spendingReducer';
+import { spendReducer } from '../store/spendReducer';
 import { spendDeleteReducer } from '../store/spendDeleteReducer';
 
 export const SpendTable = () => {
@@ -18,9 +18,7 @@ export const SpendTable = () => {
   const isFullWidth = useMediaQuery('(min-width:450px)');
 
   useEffect(() => {
-    dispatch(spendingReducer()).then((response) =>
-      setSpendData(response.payload),
-    );
+    dispatch(spendReducer()).then((response) => setSpendData(response.payload));
   }, [dispatch]);
 
   const onClickDelete = async (id) => {
@@ -30,8 +28,7 @@ export const SpendTable = () => {
     }
     try {
       const response = await dispatch(spendDeleteReducer(id));
-      console.log(response.message);
-      dispatch(spendingReducer()).then((response) =>
+      dispatch(spendReducer()).then((response) =>
         setSpendData(response.payload),
       );
     } catch (error) {
@@ -42,7 +39,9 @@ export const SpendTable = () => {
   return (
     <TableContainer component={Paper}>
       <Table
-        sx={{ width: isFullWidth ? '100%' : 'auto' }}
+        sx={{
+          width: isFullWidth ? '100%' : 'auto',
+        }}
         aria-label="simple table"
       >
         <TableHead>
@@ -65,7 +64,9 @@ export const SpendTable = () => {
               return (
                 <TableRow
                   key={row.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                  }}
                 >
                   <TableCell component="th" scope="row">
                     {row.spending_title}

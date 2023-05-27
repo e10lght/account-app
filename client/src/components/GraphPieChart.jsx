@@ -1,30 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { Card, CardContent, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { incomeMonthlyReducer } from '../store/incomeMonthlyReducer';
 import dayjs from 'dayjs';
 import { incomeCategoryReducer } from '../store/incomeCategory';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-);
 
 export const GraphPieChart = () => {
   const [monthlyIncome, setMonthlyIncome] = useState({});
@@ -50,7 +30,10 @@ export const GraphPieChart = () => {
       }
       return count;
     });
-    setMonthlyIncome({ result, categoryNameList });
+    setMonthlyIncome({
+      result,
+      categoryNameList,
+    });
   };
 
   useEffect(() => {

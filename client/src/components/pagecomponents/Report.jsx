@@ -25,7 +25,11 @@ export const Report = () => {
           label="収入・支出"
           id="select"
           select
-          sx={{ display: 'flex', maxWidth: 160, margin: 2 }}
+          sx={{
+            display: 'flex',
+            maxWidth: 160,
+            margin: 2,
+          }}
           onChange={onChangeReport}
           value={tableFlag}
         >

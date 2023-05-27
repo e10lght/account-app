@@ -1,14 +1,5 @@
 import React from 'react';
 import { Card } from '@mui/material';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
@@ -30,10 +21,8 @@ export const GraphVerticalChart = () => {
   const fetchData = async () => {
     const monthlyIncomeArray = [];
     for (const month of monthCount) {
-      console.log(month);
       const response = await dispatch(incomeMonthlyReducer(month));
       const data = response.payload;
-      console.log(data);
       let count = 0;
       for (const incomeRecord of data) {
         count += incomeRecord.income_amount;
@@ -46,16 +35,6 @@ export const GraphVerticalChart = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // これは本来1つあればいいので、外出ししてもいいかも
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-  );
 
   const options = {
     responsive: true,

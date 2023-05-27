@@ -1,0 +1,32 @@
+import dayjs from 'dayjs';
+
+export const Utils = {
+  calculateMonthlySpend(monthCount, spend) {
+    if (!Array.isArray(spend)) {
+      console.error('spendがデータ取得前で配列ではないため早期リターン');
+      return;
+    }
+
+    const monthlySpendArray = [];
+    let count = 0;
+    for (const month of monthCount) {
+      for (const spendRecord of spend) {
+        if (dayjs(month).isSame(dayjs(spendRecord.spending_date), 'month')) {
+          count += spendRecord.spending_amount;
+        }
+      }
+      monthlySpendArray.push(count);
+    }
+    return monthlySpendArray;
+  },
+  makeMonthlyCountAndLabel() {
+    const monthCount = [];
+    const monthlyLabel = [];
+    // 現在月から半年前までの月を取得する
+    for (let i = 0; i < 6; i++) {
+      monthCount.unshift(dayjs.tz().subtract(i, 'month').format('YYYY-MM-DD'));
+      monthlyLabel.unshift(dayjs.tz().subtract(i, 'month').format('MM月'));
+    }
+    return { monthCount: monthCount, monthlyLabel: monthlyLabel };
+  },
+};

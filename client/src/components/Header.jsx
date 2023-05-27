@@ -39,7 +39,13 @@ export const Header = () => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h7" component="div" sx={{ flexGrow: 1 }}>
-              <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+              <Link
+                to="/"
+                style={{
+                  textDecoration: 'none',
+                  color: 'white',
+                }}
+              >
                 支出管理アプリ
               </Link>
             </Typography>

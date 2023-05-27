@@ -27,7 +27,6 @@ export const SpendAddForm = () => {
   const [showFormsNumber, setShowFormsNumber] = useState(1);
 
   const onSubmit = (data) => {
-    console.log(data);
     dispatch(spendAddReducer(data))
       .then((response) => response.payload)
       .then((response) => {
@@ -57,11 +56,19 @@ export const SpendAddForm = () => {
                     <Grid item xs={6}>
                       no.{index + 1}
                     </Grid>
-                    <Grid item xs={6} style={{ textAlign: 'end' }}>
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        textAlign: 'end',
+                      }}
+                    >
                       {showFormsNumber > 1 && index > 0 && (
                         <Button
                           startIcon={<DeleteForeverIcon />}
-                          style={{ color: 'red' }}
+                          style={{
+                            color: 'red',
+                          }}
                           onClick={reduceSpendForm}
                         ></Button>
                       )}
@@ -69,13 +76,21 @@ export const SpendAddForm = () => {
                   </Grid>
                   <Grid item xs={8}>
                     <TextField
-                      {...register(`${index}spendTitle`, { required: true })}
+                      {...register(`${index}spendTitle`, {
+                        required: true,
+                      })}
                       label="支出タイトル"
                       fullWidth
                       placeholder="プレースホルダー"
                     />
                     {errors.incomeTitle && (
-                      <span style={{ color: 'red' }}>必須項目です</span>
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
                     )}
                   </Grid>
                   <Grid item xs={4}>
@@ -97,32 +112,57 @@ export const SpendAddForm = () => {
                       <MenuItem value="7">現金</MenuItem>
                     </TextField>
                     {errors.incomeCategoryId && (
-                      <span style={{ color: 'red' }}>必須項目です</span>
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
                     )}
                   </Grid>
 
                   <Grid item xs={6}>
                     <TextField
-                      {...register(`${index}spendAmount`, { required: true })}
-                      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                      {...register(`${index}spendAmount`, {
+                        required: true,
+                      })}
+                      inputProps={{
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
+                      }}
                       label="支出金額"
                       fullWidth
                       placeholder="プレースホルダー"
                     />
                     {errors.incomeAmount && (
-                      <span style={{ color: 'red' }}>必須項目です</span>
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
                     )}
                   </Grid>
 
                   <Grid item xs={6}>
                     <TextField
-                      {...register(`${index}.recievedDate`, { required: true })}
+                      {...register(`${index}.recievedDate`, {
+                        required: true,
+                      })}
                       type="date"
                       fullWidth
                       defaultValue={dayjs().format('YYYY-MM-DD')}
                     />
                     {errors.recievedDate && (
-                      <span style={{ color: 'red' }}>必須項目です</span>
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
                     )}
                   </Grid>
                 </>
@@ -131,7 +171,10 @@ export const SpendAddForm = () => {
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  style={{ width: '100%', border: '1px dashed' }}
+                  style={{
+                    width: '100%',
+                    border: '1px dashed',
+                  }}
                   onClick={addSpendForm}
                 >
                   追加する

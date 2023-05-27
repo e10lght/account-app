@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const spendingReducer = createAsyncThunk(
+export const spendReducer = createAsyncThunk(
   'spending/getSpending',
   async () => {
     return await axios
@@ -17,13 +17,13 @@ export const spendingReducer = createAsyncThunk(
 );
 
 export const spendingSlice = createSlice({
-  name: 'spending',
+  name: 'spend',
   initialState: {
-    spending: {},
+    spend: {},
   },
   extraReducers: {
-    [spendingReducer.fulfilled]: (state, action) => {
-      state.spending = action.payload;
+    [spendReducer.fulfilled]: (state, action) => {
+      state.spend = action.payload;
     },
   },
 });

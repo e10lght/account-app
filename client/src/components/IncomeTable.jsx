@@ -30,7 +30,6 @@ export const IncomeTable = () => {
     }
     try {
       const response = await dispatch(incomeDeleteReducer(id));
-      console.log(response.message);
       dispatch(incomeReducer()).then((response) => setIncome(response.payload));
     } catch (error) {
       console.log(error.message);
@@ -40,7 +39,9 @@ export const IncomeTable = () => {
   return (
     <TableContainer component={Paper}>
       <Table
-        sx={{ width: isFullWidth ? '100%' : 'auto' }}
+        sx={{
+          width: isFullWidth ? '100%' : 'auto',
+        }}
         aria-label="simple table"
       >
         <TableHead>
@@ -63,7 +64,9 @@ export const IncomeTable = () => {
               return (
                 <TableRow
                   key={row.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                  }}
                 >
                   <TableCell component="th" scope="row">
                     {row.income_title}

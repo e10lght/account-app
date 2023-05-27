@@ -4,7 +4,6 @@ import {
   CardContent,
   Divider,
   Grid,
-  List,
   MenuItem,
   TextField,
   Typography,
@@ -13,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { incomeMonthlyReducer } from '../../store/incomeMonthlyReducer';
 import { spendMonthlyReducer } from '../../store/spendMonthlyReducer';
 import { GraphVerticalChart } from '../GraphVerticalChart';
@@ -21,6 +20,15 @@ import { SpendVerticalChart } from '../SpendVerticalChart';
 import { useForm } from 'react-hook-form';
 import { GraphPieChart } from '../GraphPieChart';
 import { SpendPieChart } from '../SpendPieChart';
+import { SpendAreaChart } from '../SpendAreaChart';
+import '../../config/chartjs';
+import { incomeReducer } from '../../store/incomeReducer';
+import { incomeCategoryReducer } from '../../store/incomeCategory';
+import { spendCategoryReducer } from '../../store/spendCategory';
+import { spendReducer } from '../../store/spendReducer';
+import { BalanceCard } from '../BalanceCard';
+// import { useFetchData } from '../../hooks/useFetchData';
+// import { actionIncome, actionSpend } from '../../actions/actions';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,6 +36,17 @@ dayjs.tz.setDefault('Asia/Tokyo');
 
 export const Home = () => {
   const dispatch = useDispatch();
+  const { incomeMonthly = {} } =
+    useSelector((state) => state.incomeMonthly) || {};
+  const { spendMonthly = {} } =
+    useSelector((state) => state.spendMonthly) || {};
+  const { incomeCategory = {} } =
+    useSelector((state) => state.incomeCategory) || {};
+  const { income = {} } = useSelector((state) => state.income) || {};
+  const { spendCategory = {} } =
+    useSelector((state) => state.spendCategory) || {};
+  const { spend = {} } = useSelector((state) => state.spend) || {};
+
   const {
     register,
     handleSubmit,
@@ -37,51 +56,54 @@ export const Home = () => {
   const [totalIncomeMonthly, setTotalIncomeMonthly] = useState(0);
   const [totalSpendMonthly, setTotalSpendMonthly] = useState(0);
   const [graphFlag, setGraphFlag] = useState(0);
-  const [spendMonth, setSpendMonth] = useState();
-  const [incomeMonth, setIncomeMonth] = useState();
-  // targetMonthにして支出と収入で使ったほうがいいかも
-  const [spendDatalistMonth, setSpendDatalistMonth] = useState([]);
+  const [spendDate, setSpendDate] = useState();
+  const [incomeDate, setIncomeDate] = useState();
 
   useEffect(() => {
-    const incomedate = dayjs.tz().subtract(1, 'month').format('YYYY-MM-DD');
-    const spenddate = dayjs.tz().format('YYYY-MM-DD');
-    setSpendMonth(spenddate);
-    setIncomeMonth(incomedate);
-    actionIncome(incomedate);
-    actionSpend(spenddate);
+    // 初回だけ本日の日付をstateにセットする
+    const incomeToday = dayjs.tz().subtract(1, 'month').format('YYYY-MM-DD');
+    const spendToday = dayjs.tz().format('YYYY-MM-DD');
+    setIncomeDate(incomeToday);
+    setSpendDate(spendToday);
+
+    fetchData(incomeToday, spendToday);
   }, []);
 
-  const actionIncome = (incomedate) => {
-    console.log('incomedate');
-    console.log(incomedate);
-    dispatch(incomeMonthlyReducer(incomedate))
-      .then((response) => response.payload)
-      .then((data) => {
-        console.log('incomeMonthlyReducer');
-        console.log(data);
-        let count = 0;
-        for (const incomeRecord of data) {
-          count += incomeRecord.income_amount;
-        }
-        return count;
-      })
-      .then((totalAmount) => setTotalIncomeMonthly(totalAmount));
+  const fetchData = async (incomeToday, spendToday) => {
+    const incomeMonthlyResponse = await dispatch(
+      incomeMonthlyReducer(incomeToday),
+    );
+    calcTotalAmount({
+      type: 'income',
+      result: incomeMonthlyResponse.payload,
+    });
+    const spendMonthlyResponse = await dispatch(
+      spendMonthlyReducer(spendToday),
+    );
+    calcTotalAmount({
+      type: 'spend',
+      result: spendMonthlyResponse.payload,
+    });
+    dispatch(incomeCategoryReducer());
+    dispatch(incomeReducer());
+    dispatch(spendCategoryReducer());
+    dispatch(spendReducer());
   };
 
-  const actionSpend = (spenddate) => {
-    console.log('spenddate');
-    console.log(spenddate);
-    dispatch(spendMonthlyReducer(spenddate))
-      .then((response) => response.payload)
-      .then((data) => {
-        setSpendDatalistMonth(data);
-        let count = 0;
-        for (const spendRecord of data) {
-          count += spendRecord.spending_amount;
-        }
-        return count;
-      })
-      .then((totalAmount) => setTotalSpendMonthly(totalAmount));
+  const calcTotalAmount = (monthlyDatalist) => {
+    let count = 0;
+    if (monthlyDatalist.type === 'income') {
+      for (const income of monthlyDatalist.result) {
+        count += income.income_amount;
+      }
+      setTotalIncomeMonthly(count);
+    } else if (monthlyDatalist.type === 'spend') {
+      for (const spend of monthlyDatalist.result) {
+        count += spend.spending_amount;
+      }
+      setTotalSpendMonthly(count);
+    }
+    count = 0;
   };
 
   const onChangeGraph = (data) => {
@@ -89,73 +111,102 @@ export const Home = () => {
     setGraphFlag(flag);
   };
 
-  const onClickLastmonth = () => {
+  const onClickLastmonth = async () => {
     // 前月のデータ取得してグラフを再描画する
-    const spendLastMonth = dayjs(spendMonth)
+    const spendLastMonth = dayjs(spendDate)
       .tz()
       .subtract(1, 'month')
       .format('YYYY-MM-DD');
-    setSpendMonth(spendLastMonth);
-    actionSpend(spendLastMonth);
+    setSpendDate(spendLastMonth);
 
-    const incomeLastmonth = dayjs(incomeMonth)
+    try {
+      const spendMonthlyResponse = await dispatch(
+        spendMonthlyReducer(spendLastMonth),
+      );
+      calcTotalAmount({
+        type: 'spend',
+        result: spendMonthlyResponse.payload,
+      });
+    } catch (error) {
+      console.log('Error in fetching income for last month:', error);
+    }
+
+    const incomeLastmonth = dayjs(incomeDate)
       .tz()
       .subtract(1, 'month')
       .format('YYYY-MM-DD');
-    setIncomeMonth(incomeLastmonth);
-    actionIncome(incomeLastmonth);
+    setIncomeDate(incomeLastmonth);
+    try {
+      const incomeMonthlyResponse = await dispatch(
+        incomeMonthlyReducer(incomeLastmonth),
+      );
+      calcTotalAmount({
+        type: 'income',
+        result: incomeMonthlyResponse.payload,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
-  const onClickNextMonth = () => {
-    // 翌月のデータ取得してグラフを再描画する
-    const spendNextMonth = dayjs(spendMonth)
-      .tz()
-      .add(1, 'month')
-      .format('YYYY-MM-DD');
-    setSpendMonth(spendNextMonth);
-    actionSpend(spendNextMonth);
 
-    const incomeNextmonth = dayjs(incomeMonth)
+  const onClickNextMonth = async () => {
+    // 翌月のデータ取得してグラフを再描画する
+    const spendNextMonth = dayjs(spendDate)
       .tz()
       .add(1, 'month')
       .format('YYYY-MM-DD');
-    setIncomeMonth(incomeNextmonth);
-    actionIncome(incomeNextmonth);
+    setSpendDate(spendNextMonth);
+
+    try {
+      const spendMonthlyResponse = await dispatch(
+        spendMonthlyReducer(spendNextMonth),
+      );
+      calcTotalAmount({
+        type: 'spend',
+        result: spendMonthlyResponse.payload,
+      });
+    } catch (error) {
+      console.log('Error in fetching income for last month:', error);
+    }
+
+    const incomeNextmonth = dayjs(incomeDate)
+      .tz()
+      .add(1, 'month')
+      .format('YYYY-MM-DD');
+    setIncomeDate(incomeNextmonth);
+
+    try {
+      const incomeMonthlyResponse = await dispatch(
+        incomeMonthlyReducer(incomeNextmonth),
+      );
+      calcTotalAmount({
+        type: 'income',
+        result: incomeMonthlyResponse.payload,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
     <>
-      <Card sx={{ minWidth: '90%' }} style={{ margin: 10 }}>
-        <CardContent>
-          <Typography
-            variant="h3"
-            sx={{ fontSize: 24 }}
-            color="text.seconday"
-            textAlign="center"
-          >
-            {dayjs(spendMonth).format('M')}月の利用可能残高
-          </Typography>
-          <Typography sx={{ fontSize: 24 }} textAlign="center" m={2}>
-            {console.log(totalIncomeMonthly)}
-            {console.log(totalSpendMonthly)}¥
-            {(totalIncomeMonthly - totalSpendMonthly).toLocaleString()}
-          </Typography>
-          <Typography>
-            収入額合計：{Number(totalIncomeMonthly).toLocaleString()}円
-            <small>※1月前の収入が対象</small>
-          </Typography>
-          <Typography>
-            支出額合計：{Number(totalSpendMonthly).toLocaleString()}円
-          </Typography>
-          <Typography>{dayjs().format('M月DD日')}時点</Typography>
-        </CardContent>
-      </Card>
+      <BalanceCard
+        spendDate={spendDate}
+        incomeDate={incomeDate}
+        totalIncomeMonthly={totalIncomeMonthly}
+        totalSpendMonthly={totalSpendMonthly}
+      />
       <Card style={{ margin: 10 }}>
         <TextField
           {...register('spendCategoryId', { required: true })}
           label="収入・支出"
           id="select"
           select
-          sx={{ display: 'flex', maxWidth: 160, margin: 2 }}
+          sx={{
+            display: 'flex',
+            maxWidth: 160,
+            margin: 2,
+          }}
           onChange={onChangeGraph}
           value={graphFlag}
         >
@@ -167,7 +218,7 @@ export const Home = () => {
             前月
           </Button>
           <Divider />
-          {dayjs(spendMonth).tz() <= dayjs().tz().startOf('month') && (
+          {dayjs(spendDate).tz() <= dayjs().tz().startOf('month') && (
             <Button variant="text" onClick={onClickNextMonth}>
               翌月
             </Button>
@@ -186,12 +237,20 @@ export const Home = () => {
           )}
           {graphFlag === 0 && (
             <Grid item sm={6}>
-              <SpendVerticalChart />
+              <SpendVerticalChart spend={spend} />
+              {console.log(spend)}
+              <SpendAreaChart
+                text="支出額の推移"
+                label="支出額"
+                spend={spend}
+                bc="rgb(53, 162, 235)"
+                bgc="rgba(53, 162, 235, 0.5)"
+              />
             </Grid>
           )}
           {graphFlag === 0 && (
             <Grid item sm={6}>
-              <SpendPieChart dataList={spendDatalistMonth} />
+              <SpendPieChart dataList={spendMonthly} />
             </Grid>
           )}
         </Grid>

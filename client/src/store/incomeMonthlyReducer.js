@@ -4,15 +4,13 @@ import axios from 'axios';
 export const incomeMonthlyReducer = createAsyncThunk(
   '月ごとの収入結果の取得',
   async (date) => {
-    return await axios
-      .get(`/api/income/${date}`)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error.message);
-        return error;
-      });
+    try {
+      const response = await axios.get(`/api/income/${date}`);
+      return response.data;
+    } catch (error) {
+      console.log(error.message);
+      return error;
+    }
   },
 );
 
