@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { spendAddReducer } from '../../store/spendAddReducer';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,15 +18,23 @@ import dayjs from 'dayjs';
 
 export const SpendAddForm = () => {
   const dispatch = useDispatch();
+  //   const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: "test"
+  // });
   const {
     register,
     handleSubmit,
+    watch,
+    reset,
     formState: { errors },
   } = useForm();
   const [addResult, setAddResult] = useState(false);
   const [showFormsNumber, setShowFormsNumber] = useState(1);
 
   const onSubmit = (data) => {
+    console.log('onSubmit')
+    console.log(data);
     dispatch(spendAddReducer(data))
       .then((response) => response.payload)
       .then((response) => {
@@ -39,7 +47,15 @@ export const SpendAddForm = () => {
   const addSpendForm = () => {
     setShowFormsNumber((prev) => prev + 1);
   };
+
   const reduceSpendForm = () => {
+    const w = watch()
+    console.log(w)
+    let keys = Object.keys(w);
+    let lastKey = keys[keys.length - 1];
+    delete w[lastKey];
+    console.log(w)
+    reset(w)
     setShowFormsNumber((prev) => prev - 1);
   };
 
@@ -76,7 +92,7 @@ export const SpendAddForm = () => {
                   </Grid>
                   <Grid item xs={8}>
                     <TextField
-                      {...register(`${index}spendTitle`, {
+                      {...register(`${index}.spendTitle`, {
                         required: true,
                       })}
                       label="支出タイトル"
@@ -95,7 +111,7 @@ export const SpendAddForm = () => {
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
-                      {...register(`${index}spendCategoryId`, {
+                      {...register(`${index}.spendCategoryId`, {
                         required: true,
                       })}
                       label="支出カテゴリ"
@@ -124,7 +140,7 @@ export const SpendAddForm = () => {
 
                   <Grid item xs={6}>
                     <TextField
-                      {...register(`${index}spendAmount`, {
+                      {...register(`${index}.spendAmount`, {
                         required: true,
                       })}
                       inputProps={{
@@ -148,7 +164,7 @@ export const SpendAddForm = () => {
 
                   <Grid item xs={6}>
                     <TextField
-                      {...register(`${index}.recievedDate`, {
+                      {...register(`${index}.spendDate`, {
                         required: true,
                       })}
                       type="date"
@@ -164,6 +180,12 @@ export const SpendAddForm = () => {
                         必須項目です
                       </span>
                     )}
+              <input
+                type="hidden"
+                defaultValue={1}
+                {...register(`${index}.userId`, { required: true })}
+              />
+
                   </Grid>
                 </>
               ))}
@@ -180,12 +202,6 @@ export const SpendAddForm = () => {
                   追加する
                 </Button>
               </Grid>
-
-              <input
-                type="hidden"
-                defaultValue={1}
-                {...register('itme.userId', { required: true })}
-              />
 
               <Grid item xs={4}>
                 <Button variant="contained" color="primary" type="submit">

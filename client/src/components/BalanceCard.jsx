@@ -14,15 +14,20 @@ import { useEffect } from 'react';
 
 export const BalanceCard = (props) => {
   const { spendDate, incomeDate, totalIncomeMonthly, totalSpendMonthly } =
-      props;
-    console.log(props)
-    
-    useEffect(() => {
-        if (!spendDate || !incomeDate || !totalSpendMonthly || !totalIncomeMonthly) {
-            console.error('データの取得前のためリターン')
-            return 
-        }
-    }, [spendDate, incomeDate, totalIncomeMonthly, totalSpendMonthly])
+    props;
+  console.log(props);
+
+  useEffect(() => {
+    if (
+      !spendDate ||
+      !incomeDate ||
+      !totalSpendMonthly ||
+      !totalIncomeMonthly
+    ) {
+      console.error('データの取得前のためリターン');
+      return;
+    }
+  }, [spendDate, incomeDate, totalIncomeMonthly, totalSpendMonthly]);
   return (
     <Card sx={{ minWidth: '90%' }} style={{ margin: 10 }}>
       <CardContent>

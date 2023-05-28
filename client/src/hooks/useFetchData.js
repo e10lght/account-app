@@ -12,14 +12,18 @@ export const useFetchData = (incomeToday, spendToday) => {
 
   useEffect(() => {
     const fetchData = async (incomeToday, spendToday) => {
-      const incomeMonthlyResponse = await dispatch(incomeMonthlyReducer(incomeToday));
-      const spendMonthlyResponse = await dispatch(spendMonthlyReducer(spendToday));
+      const incomeMonthlyResponse = await dispatch(
+        incomeMonthlyReducer(incomeToday),
+      );
+      const spendMonthlyResponse = await dispatch(
+        spendMonthlyReducer(spendToday),
+      );
 
       dispatch(incomeCategoryReducer());
       dispatch(incomeReducer());
       dispatch(spendCategoryReducer());
       dispatch(spendReducer());
-      
+
       return {
         incomeMonthlyResponse: incomeMonthlyResponse.payload,
         spendMonthlyResponse: spendMonthlyResponse.payload,

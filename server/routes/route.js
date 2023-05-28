@@ -47,6 +47,8 @@ router.post('/income/add', async (req, res) => {
   try {
     const params = req.body;
     const rows = Object.entries(params).map((value) => value[1]);
+    console.log(params);
+    console.log(rows);
     // バリデーションの追加
     await client.query('BEGIN');
 
@@ -180,22 +182,48 @@ router.get('/spending/:date', async (req, res, next) => {
 // 支出を追加
 router.post('/spending/add', async (req, res) => {
   try {
-    const { spendTitle, spendCategoryId, spendAmount, spendDate, userId } =
-      req.body;
-    const post = [spendTitle, spendCategoryId, spendAmount, spendDate, userId];
-    console.log(post);
-    const sql =
-      'insert into t_spending  (spending_title, spending_category_id, spending_amount , spending_date, user_id) values ($1, $2, $3, $4, $5);';
-    const query = {
-      text: sql,
-      values: post,
-    };
-    await client.query(query);
+    const params = req.body;
+    const rows = Object.entries(params).map((value) => value[1]);
+    console.log(params);
+    // バリデーションの追加
+    await client.query('BEGIN');
+
+    for (const row of rows) {
+      const { spendTitle, spendCategoryId, spendAmount, spendDate, userId } =
+        row;
+      const post = [
+        spendTitle,
+        spendCategoryId,
+        spendAmount,
+        spendDate,
+        userId,
+      ];
+      const sql = `
+            insert into t_spending (
+                spending_title,
+                spending_category_id,
+                spending_amount,
+                spending_date,
+                user_id
+            )
+            values ($1, $2, $3, $4, $5);`;
+      const query = {
+        text: sql,
+        values: post,
+      };
+      await client.query(query);
+    }
+    await client.query('COMMIT'); // トランザクションのコミット
+    console.log('commit!');
     res.status(201).json({
       message: '追加に成功しました',
     });
   } catch (error) {
-    res.status(400).json({ message: error });
+    await client.query('ROLLBACK'); // エラーが発生した場合、トランザクションをロールバック
+    console.error(error.message);
+    res.status(400).json({
+      message: error.message,
+    });
   }
 });
 // 支出を更新

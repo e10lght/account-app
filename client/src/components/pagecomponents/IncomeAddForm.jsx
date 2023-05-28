@@ -21,12 +21,16 @@ export const IncomeAddForm = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    reset,
     formState: { errors },
   } = useForm({});
   const [addResult, setAddResult] = useState(false);
   const [showFormsNumber, setShowFormsNumber] = useState(1);
 
   const onSubmit = (data) => {
+    console.log('onsubmit')
+    console.log(data)
     dispatch(incomeAddReducer(data))
       .then((response) => response.payload)
       .then((response) => {
@@ -42,6 +46,13 @@ export const IncomeAddForm = () => {
   };
 
   const reduceSpendForm = () => {
+    const w = watch()
+    console.log(w)
+    let keys = Object.keys(w);
+    let lastKey = keys[keys.length - 1];
+    delete w[lastKey];
+    console.log(w)
+    reset(w)
     setShowFormsNumber((prev) => prev - 1);
   };
 
