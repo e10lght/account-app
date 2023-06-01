@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Alert,
   Box,
@@ -11,7 +11,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { incomeAddReducer } from '../../store/incomeAddReducer';
 import dayjs from 'dayjs';
@@ -29,8 +29,6 @@ export const IncomeAddForm = () => {
   const [showFormsNumber, setShowFormsNumber] = useState(1);
 
   const onSubmit = (data) => {
-    console.log('onsubmit')
-    console.log(data)
     dispatch(incomeAddReducer(data))
       .then((response) => response.payload)
       .then((response) => {
@@ -46,13 +44,11 @@ export const IncomeAddForm = () => {
   };
 
   const reduceSpendForm = () => {
-    const w = watch()
-    console.log(w)
+    const w = watch();
     let keys = Object.keys(w);
     let lastKey = keys[keys.length - 1];
     delete w[lastKey];
-    console.log(w)
-    reset(w)
+    reset(w);
     setShowFormsNumber((prev) => prev - 1);
   };
 

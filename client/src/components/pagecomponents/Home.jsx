@@ -1,12 +1,10 @@
 import {
   Button,
   Card,
-  CardContent,
   Divider,
   Grid,
   MenuItem,
   TextField,
-  Typography,
 } from '@mui/material';
 import React, { memo, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -28,8 +26,6 @@ import { spendCategoryReducer } from '../../store/spendCategory';
 import { spendReducer } from '../../store/spendReducer';
 import { BalanceCard } from '../BalanceCard';
 import { IncomeAreaChart } from '../IncomeAreaChart';
-// import { useFetchData } from '../../hooks/useFetchData';
-// import { actionIncome, actionSpend } from '../../actions/actions';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -59,8 +55,8 @@ export const Home = memo(() => {
   const [graphFlag, setGraphFlag] = useState(0);
   const [spendDate, setSpendDate] = useState();
   const [incomeDate, setIncomeDate] = useState();
-  const [incomeMonthlyData, setIncomeMonthlyData] = useState([])
-  const [spendMonthlyData, setSpendMonthlyData] = useState([])
+  const [incomeMonthlyData, setIncomeMonthlyData] = useState([]);
+  const [spendMonthlyData, setSpendMonthlyData] = useState([]);
 
   useEffect(() => {
     // 初回だけ本日の日付をstateにセットする
@@ -69,17 +65,14 @@ export const Home = memo(() => {
     setIncomeDate(incomeToday);
     setSpendDate(spendToday);
 
-    console.log('useeffect!')
     fetchData(incomeToday, spendToday);
   }, []);
 
   const fetchData = async (incomeToday, spendToday) => {
-    console.log('fetchData')
     const incomeMonthlyResponse = await dispatch(
       incomeMonthlyReducer(incomeToday),
     );
-    setIncomeMonthlyData(incomeMonthlyResponse.payload)
-    console.log(incomeMonthlyResponse.payload)
+    setIncomeMonthlyData(incomeMonthlyResponse.payload);
     calcTotalAmount({
       type: 'income',
       result: incomeMonthlyResponse.payload,
@@ -87,7 +80,7 @@ export const Home = memo(() => {
     const spendMonthlyResponse = await dispatch(
       spendMonthlyReducer(spendToday),
     );
-    setSpendMonthlyData(spendMonthlyResponse.payload)
+    setSpendMonthlyData(spendMonthlyResponse.payload);
     calcTotalAmount({
       type: 'spend',
       result: spendMonthlyResponse.payload,
@@ -99,7 +92,6 @@ export const Home = memo(() => {
   };
 
   const calcTotalAmount = (monthlyDatalist) => {
-    console.log('calcTotalAmount')
     let count = 0;
     if (monthlyDatalist.type === 'income') {
       for (const income of monthlyDatalist.result) {
@@ -132,7 +124,7 @@ export const Home = memo(() => {
       const spendMonthlyResponse = await dispatch(
         spendMonthlyReducer(spendLastMonth),
       );
-      setSpendMonthlyData(spendMonthlyResponse.payload)
+      setSpendMonthlyData(spendMonthlyResponse.payload);
       calcTotalAmount({
         type: 'spend',
         result: spendMonthlyResponse.payload,
@@ -150,7 +142,7 @@ export const Home = memo(() => {
       const incomeMonthlyResponse = await dispatch(
         incomeMonthlyReducer(incomeLastmonth),
       );
-      setIncomeMonthlyData(incomeMonthlyResponse.payload)
+      setIncomeMonthlyData(incomeMonthlyResponse.payload);
       calcTotalAmount({
         type: 'income',
         result: incomeMonthlyResponse.payload,
@@ -172,7 +164,7 @@ export const Home = memo(() => {
       const spendMonthlyResponse = await dispatch(
         spendMonthlyReducer(spendNextMonth),
       );
-      setSpendMonthlyData(spendMonthlyResponse.payload)
+      setSpendMonthlyData(spendMonthlyResponse.payload);
       calcTotalAmount({
         type: 'spend',
         result: spendMonthlyResponse.payload,
@@ -191,7 +183,7 @@ export const Home = memo(() => {
       const incomeMonthlyResponse = await dispatch(
         incomeMonthlyReducer(incomeNextmonth),
       );
-      setIncomeMonthlyData(incomeMonthlyResponse.payload)
+      setIncomeMonthlyData(incomeMonthlyResponse.payload);
       calcTotalAmount({
         type: 'income',
         result: incomeMonthlyResponse.payload,

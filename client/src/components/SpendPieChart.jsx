@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { spendCategoryReducer } from '../store/spendCategory';
 
 export const SpendPieChart = memo((props) => {
-  console.log('spendpie!')
   const { spenddataList } = props;
   const [monthlySpend, setMonthlySpend] = useState({});
   const dispatch = useDispatch();
@@ -13,7 +12,9 @@ export const SpendPieChart = memo((props) => {
   const fetchData = async () => {
     // カテゴリ数を取得し、それぞれの合計を配列に格納する
     const responseCategory = await dispatch(spendCategoryReducer());
-    const categories = Array.isArray(responseCategory.payload) ? responseCategory.payload : [];
+    const categories = Array.isArray(responseCategory.payload)
+      ? responseCategory.payload
+      : [];
     const categoryNameList = categories.map(
       (category) => category.spending_category_name,
     );

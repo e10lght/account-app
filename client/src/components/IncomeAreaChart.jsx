@@ -2,16 +2,11 @@ import React, { memo } from 'react';
 import { Card } from '@mui/material';
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
-import { useDispatch } from 'react-redux';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { spendMonthlyReducer } from '../store/spendMonthlyReducer';
 import { Utils } from '../utils/utils';
 
 export const IncomeAreaChart = memo((props) => {
-    const { text, label, income, bc, bgc } = props;
-    console.log('IncomeAreaChart')
-    console.log(income)
+  const { text, label, income, bc, bgc } = props;
   const [monthlyIncome, setMonthlyIncome] = useState([]);
   const [dataLabels, setDataLabels] = useState();
 

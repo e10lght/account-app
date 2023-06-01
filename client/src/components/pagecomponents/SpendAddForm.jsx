@@ -9,8 +9,8 @@ import {
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { spendAddReducer } from '../../store/spendAddReducer';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -18,10 +18,6 @@ import dayjs from 'dayjs';
 
 export const SpendAddForm = () => {
   const dispatch = useDispatch();
-  //   const { fields, append, remove } = useFieldArray({
-  //   control,
-  //   name: "test"
-  // });
   const {
     register,
     handleSubmit,
@@ -33,8 +29,6 @@ export const SpendAddForm = () => {
   const [showFormsNumber, setShowFormsNumber] = useState(1);
 
   const onSubmit = (data) => {
-    console.log('onSubmit')
-    console.log(data);
     dispatch(spendAddReducer(data))
       .then((response) => response.payload)
       .then((response) => {
@@ -49,13 +43,11 @@ export const SpendAddForm = () => {
   };
 
   const reduceSpendForm = () => {
-    const w = watch()
-    console.log(w)
+    const w = watch();
     let keys = Object.keys(w);
     let lastKey = keys[keys.length - 1];
     delete w[lastKey];
-    console.log(w)
-    reset(w)
+    reset(w);
     setShowFormsNumber((prev) => prev - 1);
   };
 
@@ -180,12 +172,11 @@ export const SpendAddForm = () => {
                         必須項目です
                       </span>
                     )}
-              <input
-                type="hidden"
-                defaultValue={1}
-                {...register(`${index}.userId`, { required: true })}
-              />
-
+                    <input
+                      type="hidden"
+                      defaultValue={1}
+                      {...register(`${index}.userId`, { required: true })}
+                    />
                   </Grid>
                 </>
               ))}

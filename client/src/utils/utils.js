@@ -29,7 +29,9 @@ export const Utils = {
     let count = 0;
     for (const month of monthCount) {
       for (const incomeRecord of income) {
-        if (dayjs(month).isSame(dayjs(incomeRecord.income_recieved_date), 'month')) {
+        if (
+          dayjs(month).isSame(dayjs(incomeRecord.income_recieved_date), 'month')
+        ) {
           count += incomeRecord.income_amount;
         }
       }
