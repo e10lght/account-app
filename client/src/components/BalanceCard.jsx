@@ -15,7 +15,6 @@ import { useEffect } from 'react';
 export const BalanceCard = (props) => {
   const { spendDate, incomeDate, totalIncomeMonthly, totalSpendMonthly } =
     props;
-  console.log(props);
 
   useEffect(() => {
     if (
@@ -24,7 +23,7 @@ export const BalanceCard = (props) => {
       !totalSpendMonthly ||
       !totalIncomeMonthly
     ) {
-      console.error('データの取得前のためリターン');
+      console.info('データの取得前のためリターン');
       return;
     }
   }, [spendDate, incomeDate, totalIncomeMonthly, totalSpendMonthly]);

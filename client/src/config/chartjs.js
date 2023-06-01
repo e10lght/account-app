@@ -18,3 +18,8 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
+
+export const INCOME_PIECHART = {
+  backgroundColor: ['#ff69b4', '#ff1493', '#c71585'],
+  hoverBackgroundColor: ['#ff69b4cc', '#ff1493cc', '#c71585cc'],
+}

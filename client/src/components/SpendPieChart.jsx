@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Card, CardContent, Typography } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { spendCategoryReducer } from '../store/spendCategory';
 
-export const SpendPieChart = (props) => {
-  const { dataList } = props;
+export const SpendPieChart = memo((props) => {
+  console.log('spendpie!')
+  const { spenddataList } = props;
   const [monthlySpend, setMonthlySpend] = useState({});
   const dispatch = useDispatch();
-  const { spendMonthly = {} } =
-    useSelector((state) => state.spendMonthly) || {};
 
   const fetchData = async () => {
     // カテゴリ数を取得し、それぞれの合計を配列に格納する
     const responseCategory = await dispatch(spendCategoryReducer());
-    const categories = responseCategory.payload;
+    const categories = Array.isArray(responseCategory.payload) ? responseCategory.payload : [];
     const categoryNameList = categories.map(
       (category) => category.spending_category_name,
     );
@@ -22,7 +21,7 @@ export const SpendPieChart = (props) => {
     // カテゴリ別に合計の金額を集計する
     const result = categories.map((category) => {
       let count = 0;
-      for (const incomeRecord of dataList) {
+      for (const incomeRecord of spenddataList) {
         if (category.id === incomeRecord.spending_category_id) {
           count += incomeRecord.spending_amount;
         }
@@ -37,7 +36,7 @@ export const SpendPieChart = (props) => {
 
   useEffect(() => {
     fetchData();
-  }, [dataList]);
+  }, [spenddataList]);
 
   const options = {
     responsive: true,
@@ -90,4 +89,4 @@ export const SpendPieChart = (props) => {
       </CardContent>
     </Card>
   );
-};
+});

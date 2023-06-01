@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -18,7 +18,7 @@ import { spendMonthlyReducer } from '../../store/spendMonthlyReducer';
 import { GraphVerticalChart } from '../GraphVerticalChart';
 import { SpendVerticalChart } from '../SpendVerticalChart';
 import { useForm } from 'react-hook-form';
-import { GraphPieChart } from '../GraphPieChart';
+import { IncomePieChart } from '../IncomePieChart';
 import { SpendPieChart } from '../SpendPieChart';
 import { SpendAreaChart } from '../SpendAreaChart';
 import '../../config/chartjs';
@@ -27,6 +27,7 @@ import { incomeCategoryReducer } from '../../store/incomeCategory';
 import { spendCategoryReducer } from '../../store/spendCategory';
 import { spendReducer } from '../../store/spendReducer';
 import { BalanceCard } from '../BalanceCard';
+import { IncomeAreaChart } from '../IncomeAreaChart';
 // import { useFetchData } from '../../hooks/useFetchData';
 // import { actionIncome, actionSpend } from '../../actions/actions';
 
@@ -34,7 +35,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('Asia/Tokyo');
 
-export const Home = () => {
+export const Home = memo(() => {
   const dispatch = useDispatch();
   const { incomeMonthly = {} } =
     useSelector((state) => state.incomeMonthly) || {};
@@ -58,6 +59,8 @@ export const Home = () => {
   const [graphFlag, setGraphFlag] = useState(0);
   const [spendDate, setSpendDate] = useState();
   const [incomeDate, setIncomeDate] = useState();
+  const [incomeMonthlyData, setIncomeMonthlyData] = useState([])
+  const [spendMonthlyData, setSpendMonthlyData] = useState([])
 
   useEffect(() => {
     // 初回だけ本日の日付をstateにセットする
@@ -66,13 +69,17 @@ export const Home = () => {
     setIncomeDate(incomeToday);
     setSpendDate(spendToday);
 
+    console.log('useeffect!')
     fetchData(incomeToday, spendToday);
   }, []);
 
   const fetchData = async (incomeToday, spendToday) => {
+    console.log('fetchData')
     const incomeMonthlyResponse = await dispatch(
       incomeMonthlyReducer(incomeToday),
     );
+    setIncomeMonthlyData(incomeMonthlyResponse.payload)
+    console.log(incomeMonthlyResponse.payload)
     calcTotalAmount({
       type: 'income',
       result: incomeMonthlyResponse.payload,
@@ -80,6 +87,7 @@ export const Home = () => {
     const spendMonthlyResponse = await dispatch(
       spendMonthlyReducer(spendToday),
     );
+    setSpendMonthlyData(spendMonthlyResponse.payload)
     calcTotalAmount({
       type: 'spend',
       result: spendMonthlyResponse.payload,
@@ -91,6 +99,7 @@ export const Home = () => {
   };
 
   const calcTotalAmount = (monthlyDatalist) => {
+    console.log('calcTotalAmount')
     let count = 0;
     if (monthlyDatalist.type === 'income') {
       for (const income of monthlyDatalist.result) {
@@ -123,6 +132,7 @@ export const Home = () => {
       const spendMonthlyResponse = await dispatch(
         spendMonthlyReducer(spendLastMonth),
       );
+      setSpendMonthlyData(spendMonthlyResponse.payload)
       calcTotalAmount({
         type: 'spend',
         result: spendMonthlyResponse.payload,
@@ -140,6 +150,7 @@ export const Home = () => {
       const incomeMonthlyResponse = await dispatch(
         incomeMonthlyReducer(incomeLastmonth),
       );
+      setIncomeMonthlyData(incomeMonthlyResponse.payload)
       calcTotalAmount({
         type: 'income',
         result: incomeMonthlyResponse.payload,
@@ -161,6 +172,7 @@ export const Home = () => {
       const spendMonthlyResponse = await dispatch(
         spendMonthlyReducer(spendNextMonth),
       );
+      setSpendMonthlyData(spendMonthlyResponse.payload)
       calcTotalAmount({
         type: 'spend',
         result: spendMonthlyResponse.payload,
@@ -179,6 +191,7 @@ export const Home = () => {
       const incomeMonthlyResponse = await dispatch(
         incomeMonthlyReducer(incomeNextmonth),
       );
+      setIncomeMonthlyData(incomeMonthlyResponse.payload)
       calcTotalAmount({
         type: 'income',
         result: incomeMonthlyResponse.payload,
@@ -218,7 +231,7 @@ export const Home = () => {
             前月
           </Button>
           <Divider />
-          {dayjs(spendDate).tz() <= dayjs().tz().startOf('month') && (
+          {dayjs(spendDate).tz().format('M') < dayjs().tz().format('M') && (
             <Button variant="text" onClick={onClickNextMonth}>
               翌月
             </Button>
@@ -228,17 +241,23 @@ export const Home = () => {
           {graphFlag === 1 && (
             <Grid item sm={6}>
               <GraphVerticalChart />
+              <IncomeAreaChart
+                text="収入額の推移"
+                label="収入額"
+                income={income}
+                bc="rgb(255, 105, 180)"
+                bgc="rgba(255, 105, 180, 0.5)"
+              />
             </Grid>
           )}
           {graphFlag === 1 && (
             <Grid item sm={6}>
-              <GraphPieChart />
+              <IncomePieChart incomedataList={incomeMonthlyData} />
             </Grid>
           )}
           {graphFlag === 0 && (
             <Grid item sm={6}>
               <SpendVerticalChart spend={spend} />
-              {console.log(spend)}
               <SpendAreaChart
                 text="支出額の推移"
                 label="支出額"
@@ -250,11 +269,11 @@ export const Home = () => {
           )}
           {graphFlag === 0 && (
             <Grid item sm={6}>
-              <SpendPieChart dataList={spendMonthly} />
+              <SpendPieChart spenddataList={spendMonthlyData} />
             </Grid>
           )}
         </Grid>
       </Card>
     </>
   );
-};
+});
