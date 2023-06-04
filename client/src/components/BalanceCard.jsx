@@ -27,18 +27,18 @@ export const BalanceCard = (props) => {
           color="text.seconday"
           textAlign="center"
         >
-          {dayjs(spendDate).format('M')}
-          月の利用可能残高
+          {dayjs(spendDate).format('YYYY年M月')}
+          の総計
         </Typography>
         <Typography sx={{ fontSize: 24 }} textAlign="center" m={2}>
           ¥{(totalIncomeMonthly - totalSpendMonthly).toLocaleString()}
         </Typography>
         <Typography>
-          収入額合計({dayjs(incomeDate).format('M')}月)：
+          収入額合計：
           {Number(totalIncomeMonthly).toLocaleString()}円
         </Typography>
         <Typography>
-          支出額合計({dayjs(spendDate).format('M')}月)：
+          支出額合計：
           {Number(totalSpendMonthly).toLocaleString()}円
         </Typography>
         <Typography>

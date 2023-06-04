@@ -68,8 +68,13 @@ export const IncomePieChart = memo((props) => {
 
   return (
     <Card style={{ margin: 10 }}>
-      <Pie data={data} options={options} legend={10} />
       <CardContent>
+      {data.datasets[0].data &&
+          (data.datasets[0].data.every((amount) => amount === 0) ? (
+            <p style={{ padding: '60px' }}>データがありません</p>
+          ) : (
+            <Pie data={data} options={options} legend={10} />
+          ))}
         {/* index使わないとだめか？ */}
         {monthlyIncome.categoryNameList &&
           monthlyIncome.categoryNameList.map((value, index) => {
