@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const dayjs = require('dayjs');
 // const { fetchJson, fetchJsonAll } = require('../util/fetchJson');
 const { client } = require('../db/connect');
+const { setCachedIncomeDataList, getCachedIncomeDataList } = require('../util/cron');
 
 // 月の入金額をすべて取得
 router.get('/income', async (req, res, next) => {
@@ -18,24 +19,32 @@ router.get('/income', async (req, res, next) => {
   }
 });
 // 指定された月の入金額を取得
+// キャッシュがあればキャッシュのデータを即座に返す
 router.get('/income/:date', async (req, res, next) => {
   try {
     const date = req.params.date;
-    console.log(date);
     const startMonth = dayjs(date).startOf('month').format('YYYY-MM-DD');
     const endMonth = dayjs(date).endOf('month').format('YYYY-MM-DD');
-    const data = [startMonth, endMonth];
-    console.log(startMonth);
-    console.log(endMonth);
+    const startAndEndDates = [startMonth, endMonth];
+    
+    const cachedIncomeDataList = getCachedIncomeDataList();
+    if (cachedIncomeDataList.hasOwnProperty(startMonth)) {
+      console.log('キャッシュを返す');
+      res.status(200).json(cachedIncomeDataList[startMonth]);
+      return;
+    }
+
     // sqlは外だしできるならそうしたほうがいいかも
     const sql =
       'SELECT * FROM t_income as i inner join t_income_categories as c on i.income_category_id = c.id where i.income_recieved_date >= $1 and i.income_recieved_date <= $2;';
     const query = {
       text: sql,
-      values: data,
+      values: startAndEndDates,
     };
     const result = await client.query(query);
-    res.status(201).json(result.rows);
+    setCachedIncomeDataList(startMonth, result.rows)
+    console.log('値を取得して返す');
+    res.status(200).json(result.rows);
   } catch (error) {
     res.status(500).json({
       message: error.message,

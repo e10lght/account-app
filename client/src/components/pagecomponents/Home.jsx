@@ -60,7 +60,7 @@ export const Home = memo(() => {
 
   useEffect(() => {
     // 初回だけ本日の日付をstateにセットする
-    const incomeToday = dayjs.tz().subtract(1, 'month').format('YYYY-MM-DD');
+    const incomeToday = dayjs.tz().format('YYYY-MM-DD');
     const spendToday = dayjs.tz().format('YYYY-MM-DD');
     setIncomeDate(incomeToday);
     setSpendDate(spendToday);

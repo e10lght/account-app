@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-} from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 

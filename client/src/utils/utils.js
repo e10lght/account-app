@@ -16,6 +16,7 @@ export const Utils = {
         }
       }
       monthlySpendArray.push(count);
+      count = 0;
     }
     return monthlySpendArray;
   },
@@ -36,6 +37,7 @@ export const Utils = {
         }
       }
       monthlyIncomeArray.push(count);
+      count = 0;
     }
     return monthlyIncomeArray;
   },
