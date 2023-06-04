@@ -120,6 +120,12 @@ export const Home = memo(() => {
       .format('YYYY-MM-DD');
     setSpendDate(spendLastMonth);
 
+    const incomeLastmonth = dayjs(incomeDate)
+      .tz()
+      .subtract(1, 'month')
+      .format('YYYY-MM-DD');
+    setIncomeDate(incomeLastmonth);
+
     try {
       const spendMonthlyResponse = await dispatch(
         spendMonthlyReducer(spendLastMonth),
@@ -129,16 +135,7 @@ export const Home = memo(() => {
         type: 'spend',
         result: spendMonthlyResponse.payload,
       });
-    } catch (error) {
-      console.log('Error in fetching income for last month:', error);
-    }
 
-    const incomeLastmonth = dayjs(incomeDate)
-      .tz()
-      .subtract(1, 'month')
-      .format('YYYY-MM-DD');
-    setIncomeDate(incomeLastmonth);
-    try {
       const incomeMonthlyResponse = await dispatch(
         incomeMonthlyReducer(incomeLastmonth),
       );
@@ -160,6 +157,12 @@ export const Home = memo(() => {
       .format('YYYY-MM-DD');
     setSpendDate(spendNextMonth);
 
+    const incomeNextmonth = dayjs(incomeDate)
+      .tz()
+      .add(1, 'month')
+      .format('YYYY-MM-DD');
+    setIncomeDate(incomeNextmonth);
+
     try {
       const spendMonthlyResponse = await dispatch(
         spendMonthlyReducer(spendNextMonth),
@@ -169,17 +172,7 @@ export const Home = memo(() => {
         type: 'spend',
         result: spendMonthlyResponse.payload,
       });
-    } catch (error) {
-      console.log('Error in fetching income for last month:', error);
-    }
 
-    const incomeNextmonth = dayjs(incomeDate)
-      .tz()
-      .add(1, 'month')
-      .format('YYYY-MM-DD');
-    setIncomeDate(incomeNextmonth);
-
-    try {
       const incomeMonthlyResponse = await dispatch(
         incomeMonthlyReducer(incomeNextmonth),
       );

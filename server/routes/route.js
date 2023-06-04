@@ -3,7 +3,10 @@ const { v4: uuidv4 } = require('uuid');
 const dayjs = require('dayjs');
 // const { fetchJson, fetchJsonAll } = require('../util/fetchJson');
 const { client } = require('../db/connect');
-const { setCachedIncomeDataList, getCachedIncomeDataList } = require('../util/cron');
+const {
+  setCachedIncomeDataList,
+  getCachedIncomeDataList,
+} = require('../util/cron');
 
 // 月の入金額をすべて取得
 router.get('/income', async (req, res, next) => {
@@ -26,7 +29,7 @@ router.get('/income/:date', async (req, res, next) => {
     const startMonth = dayjs(date).startOf('month').format('YYYY-MM-DD');
     const endMonth = dayjs(date).endOf('month').format('YYYY-MM-DD');
     const startAndEndDates = [startMonth, endMonth];
-    
+
     const cachedIncomeDataList = getCachedIncomeDataList();
     if (cachedIncomeDataList.hasOwnProperty(startMonth)) {
       console.log('キャッシュを返す');
@@ -42,7 +45,7 @@ router.get('/income/:date', async (req, res, next) => {
       values: startAndEndDates,
     };
     const result = await client.query(query);
-    setCachedIncomeDataList(startMonth, result.rows)
+    setCachedIncomeDataList(startMonth, result.rows);
     console.log('値を取得して返す');
     res.status(200).json(result.rows);
   } catch (error) {

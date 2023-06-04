@@ -11,7 +11,7 @@ cron.schedule('0 0 * * *', clearCacheIncome);
 
 module.exports = {
   getCachedIncomeDataList: () => cachedIncomeList,
-    setCachedIncomeDataList: (month, data) => {
+  setCachedIncomeDataList: (month, data) => {
     cachedIncomeList[month] = data;
   },
   clearCacheIncome,
