@@ -216,9 +216,6 @@ export const Home = memo(() => {
             前月
           </Button>
           <Divider />
-          {/* {console.log(parseInt(dayjs(spendDate).tz().format('YYYYMM')))}
-          {console.log(parseInt(dayjs().tz().format('YYYYMM')))}
-          {console.log(parseInt(dayjs(spendDate).tz().format('YYYYMM')) < parseInt(dayjs().tz().format('YYYYMM')))} */}
           {parseInt(dayjs(spendDate).tz().format('YYYYMM')) <
             parseInt(dayjs().tz().format('YYYYMM')) && (
             <Button variant="text" onClick={onClickNextMonth}>
