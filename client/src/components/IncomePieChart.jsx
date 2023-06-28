@@ -69,7 +69,7 @@ export const IncomePieChart = memo((props) => {
   return (
     <Card style={{ margin: 10 }}>
       <CardContent>
-      {data.datasets[0].data &&
+        {data.datasets[0].data &&
           (data.datasets[0].data.every((amount) => amount === 0) ? (
             <p style={{ padding: '60px' }}>データがありません</p>
           ) : (
