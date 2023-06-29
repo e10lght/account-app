@@ -1,7 +1,7 @@
 const Categories = require('../models/Categories');
 
 module.exports = {
-  getIncomeCategories: async () => {
+  getIncomeCategories: async (req, res, next) => {
     try {
       const result = await Categories.findAll();
       res.status(200).json(result);
@@ -11,7 +11,7 @@ module.exports = {
       });
     }
   },
-  getSpendCategories: async () => {
+  getSpendCategories: async (req, res, next) => {
     try {
       const result = await Categories.findAllSpend();
       res.status(200).json(result);
