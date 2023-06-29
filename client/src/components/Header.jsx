@@ -40,7 +40,7 @@ export const Header = () => {
             </IconButton>
             <Typography variant="h7" component="div" sx={{ flexGrow: 1 }}>
               <Link
-                to="/"
+                to="/home"
                 style={{
                   textDecoration: 'none',
                   color: 'white',
