@@ -1,5 +1,5 @@
 const IncomeController = require('../../controllers/Income');
-const IncomeModel = require('../../models/Income'); 
+const IncomeModel = require('../../models/Income');
 
 jest.mock('../../models/Income');
 

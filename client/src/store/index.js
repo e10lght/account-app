@@ -10,6 +10,7 @@ import spendCategoryReducer from './spendCategory';
 import spendDeleteReducer from './spendDeleteReducer';
 import spendReducer from './spendReducer';
 import spendMonthlyReducer from './spendMonthlyReducer';
+import loginReducer from './loginReducer';
 
 const store = configureStore(
   {
@@ -24,6 +25,7 @@ const store = configureStore(
       spendCategory: spendCategoryReducer,
       spendDelete: spendDeleteReducer,
       spendMonthly: spendMonthlyReducer,
+      login: loginReducer,
     },
   },
   applyMiddleware(thunk),

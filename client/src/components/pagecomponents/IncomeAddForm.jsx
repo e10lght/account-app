@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { incomeAddReducer } from '../../store/incomeAddReducer';
 import dayjs from 'dayjs';
+import { Header } from '../Header';
 
 export const IncomeAddForm = () => {
   const dispatch = useDispatch();
@@ -53,158 +54,161 @@ export const IncomeAddForm = () => {
   };
 
   return (
-    <Card style={{ margin: 10 }}>
-      <Box p={5}>
-        <h2>収入レコード追加</h2>
+    <>
+      <Header />
+      <Card style={{ margin: 10 }}>
+        <Box p={5}>
+          <h2>収入レコード追加</h2>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={1}>
-            {[...Array(showFormsNumber)].map((_, index) => (
-              <>
-                <Grid container item xs={12}>
-                  <Grid item xs={6}>
-                    no.{index + 1}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={1}>
+              {[...Array(showFormsNumber)].map((_, index) => (
+                <>
+                  <Grid container item xs={12}>
+                    <Grid item xs={6}>
+                      no.{index + 1}
+                    </Grid>
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        textAlign: 'end',
+                      }}
+                    >
+                      {showFormsNumber > 1 && index > 0 && (
+                        <Button
+                          startIcon={<DeleteForeverIcon />}
+                          style={{
+                            color: 'red',
+                          }}
+                          onClick={reduceSpendForm}
+                        ></Button>
+                      )}
+                    </Grid>
                   </Grid>
-                  <Grid
-                    item
-                    xs={6}
-                    style={{
-                      textAlign: 'end',
-                    }}
-                  >
-                    {showFormsNumber > 1 && index > 0 && (
-                      <Button
-                        startIcon={<DeleteForeverIcon />}
+
+                  <Grid item xs={8}>
+                    <TextField
+                      {...register(`${index}.incomeTitle`, {
+                        required: true,
+                      })}
+                      label="収入タイトル"
+                      fullWidth
+                      placeholder="プレースホルダー"
+                    />
+                    {errors.incomeTitle && (
+                      <span
                         style={{
                           color: 'red',
                         }}
-                        onClick={reduceSpendForm}
-                      ></Button>
+                      >
+                        必須項目です
+                      </span>
                     )}
                   </Grid>
-                </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      {...register(`${index}.incomeCategoryId`, {
+                        required: true,
+                      })}
+                      label="収入カテゴリ"
+                      fullWidth
+                      id="select"
+                      select
+                    >
+                      <MenuItem value="1">給料</MenuItem>
+                      <MenuItem value="2">お小遣い</MenuItem>
+                      <MenuItem value="3">選択肢3</MenuItem>
+                    </TextField>
+                    {errors.incomeCategoryId && (
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
+                    )}
+                  </Grid>
 
-                <Grid item xs={8}>
-                  <TextField
-                    {...register(`${index}.incomeTitle`, {
-                      required: true,
-                    })}
-                    label="収入タイトル"
-                    fullWidth
-                    placeholder="プレースホルダー"
-                  />
-                  {errors.incomeTitle && (
-                    <span
-                      style={{
-                        color: 'red',
+                  <Grid item xs={6}>
+                    <TextField
+                      {...register(`${index}.incomeAmount`, {
+                        required: true,
+                      })}
+                      inputProps={{
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
                       }}
-                    >
-                      必須項目です
-                    </span>
-                  )}
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    {...register(`${index}.incomeCategoryId`, {
-                      required: true,
-                    })}
-                    label="収入カテゴリ"
-                    fullWidth
-                    id="select"
-                    select
-                  >
-                    <MenuItem value="1">給料</MenuItem>
-                    <MenuItem value="2">お小遣い</MenuItem>
-                    <MenuItem value="3">選択肢3</MenuItem>
-                  </TextField>
-                  {errors.incomeCategoryId && (
-                    <span
-                      style={{
-                        color: 'red',
-                      }}
-                    >
-                      必須項目です
-                    </span>
-                  )}
-                </Grid>
+                      label="収入金額"
+                      fullWidth
+                      placeholder="プレースホルダー"
+                    />
+                    {errors.incomeAmount && (
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
+                    )}
+                  </Grid>
 
-                <Grid item xs={6}>
-                  <TextField
-                    {...register(`${index}.incomeAmount`, {
-                      required: true,
-                    })}
-                    inputProps={{
-                      inputMode: 'numeric',
-                      pattern: '[0-9]*',
-                    }}
-                    label="収入金額"
-                    fullWidth
-                    placeholder="プレースホルダー"
+                  <Grid item xs={6}>
+                    <TextField
+                      {...register(`${index}.recievedDate`, {
+                        required: true,
+                      })}
+                      type="date"
+                      fullWidth
+                      defaultValue={dayjs().format('YYYY-MM-DD')}
+                    />
+                    {errors.recievedDate && (
+                      <span
+                        style={{
+                          color: 'red',
+                        }}
+                      >
+                        必須項目です
+                      </span>
+                    )}
+                  </Grid>
+                  <input
+                    type="hidden"
+                    defaultValue={1}
+                    {...register(`${index}.userId`, { required: true })}
                   />
-                  {errors.incomeAmount && (
-                    <span
-                      style={{
-                        color: 'red',
-                      }}
-                    >
-                      必須項目です
-                    </span>
-                  )}
-                </Grid>
+                </>
+              ))}
+              <Grid item xs={12}>
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  style={{
+                    width: '100%',
+                    border: '1px dashed',
+                  }}
+                  onClick={addIncomeForm}
+                >
+                  追加する
+                </Button>
+              </Grid>
 
-                <Grid item xs={6}>
-                  <TextField
-                    {...register(`${index}.recievedDate`, {
-                      required: true,
-                    })}
-                    type="date"
-                    fullWidth
-                    defaultValue={dayjs().format('YYYY-MM-DD')}
-                  />
-                  {errors.recievedDate && (
-                    <span
-                      style={{
-                        color: 'red',
-                      }}
-                    >
-                      必須項目です
-                    </span>
-                  )}
-                </Grid>
-                <input
-                  type="hidden"
-                  defaultValue={1}
-                  {...register(`${index}.userId`, { required: true })}
-                />
-              </>
-            ))}
-            <Grid item xs={12}>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                style={{
-                  width: '100%',
-                  border: '1px dashed',
-                }}
-                onClick={addIncomeForm}
-              >
-                追加する
-              </Button>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" type="submit">
+                  登録
+                </Button>
+              </Grid>
             </Grid>
-
-            <Grid item xs={4}>
-              <Button variant="contained" color="primary" type="submit">
-                登録
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Box>
-      {addResult && (
-        <Alert severity="success" color="info">
-          {addResult}
-        </Alert>
-      )}
-    </Card>
+          </form>
+        </Box>
+        {addResult && (
+          <Alert severity="success" color="info">
+            {addResult}
+          </Alert>
+        )}
+      </Card>
+    </>
   );
 };

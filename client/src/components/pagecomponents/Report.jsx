@@ -1,6 +1,7 @@
 import { Card, MenuItem, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Header } from '../Header';
 import { IncomeTable } from '../IncomeTable';
 import { SpendTable } from '../SpendTable';
 
@@ -19,6 +20,7 @@ export const Report = () => {
   };
   return (
     <>
+      <Header />
       <Card style={{ margin: 10 }}>
         <TextField
           {...register('spendCategoryId', { required: true })}

@@ -6,6 +6,7 @@ const {
 const Income = require('../controllers/Income');
 const Spending = require('../controllers/Spending');
 const Categories = require('../controllers/Categories');
+const Users = require('../controllers/Users');
 
 router.get('/income', Income.getIncomeAllData);
 router.get('/income/:date', Income.getIncomeMonthlyData);
@@ -22,5 +23,9 @@ router.get('/spendingcategory', Categories.getSpendCategories);
 
 // 収入のカテゴリ追加・更新・削除
 // 支出のカテゴリ追加・更新・削除
+
+// ユーザ登録・ログインチェック
+router.post('/register', Users.register);
+router.post('/login', Users.login);
 
 module.exports = router;

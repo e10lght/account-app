@@ -16,6 +16,8 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+// セッション管理
+
 app.use('/api', Router);
 
 // Reactアプリケーションのビルドディレクトリを指定します。

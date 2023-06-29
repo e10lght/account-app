@@ -26,6 +26,7 @@ import { spendCategoryReducer } from '../../store/spendCategory';
 import { spendReducer } from '../../store/spendReducer';
 import { BalanceCard } from '../BalanceCard';
 import { IncomeAreaChart } from '../IncomeAreaChart';
+import { Header } from '../Header';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -43,6 +44,9 @@ export const Home = memo(() => {
   const { spendCategory = {} } =
     useSelector((state) => state.spendCategory) || {};
   const { spend = {} } = useSelector((state) => state.spend) || {};
+
+  const { user = {} } = useSelector((state) => state.login) || {};
+  console.log(user)
 
   const {
     register,
@@ -188,6 +192,7 @@ export const Home = memo(() => {
 
   return (
     <>
+      <Header />
       <BalanceCard
         spendDate={spendDate}
         incomeDate={incomeDate}

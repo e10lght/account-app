@@ -15,6 +15,7 @@ import { spendAddReducer } from '../../store/spendAddReducer';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import dayjs from 'dayjs';
+import { Header } from '../Header';
 
 export const SpendAddForm = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ export const SpendAddForm = () => {
 
   return (
     <>
+      <Header />
       <Card style={{ margin: 10 }}>
         <Box p={5}>
           <h2>支出レコード追加</h2>

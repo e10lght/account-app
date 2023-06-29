@@ -72,7 +72,7 @@ export const Header = () => {
           <List>
             <ListItem button>
               <ListItemText>
-                <Link to="/" onClick={toggleOpenState}>
+                <Link to="/home" onClick={toggleOpenState}>
                   HOME
                 </Link>
               </ListItemText>

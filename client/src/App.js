@@ -13,7 +13,6 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Header />
           <Router />
         </ThemeProvider>
       </BrowserRouter>
