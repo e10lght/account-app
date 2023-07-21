@@ -18,12 +18,14 @@ app.use(express.json());
 
 // セッション管理
 
+// jwt
+
 app.use('/api', Router);
 
-// Reactアプリケーションのビルドディレクトリを指定します。
+// Reactのビルドディレクトリを指定
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-// すべてのリクエストをReactアプリケーションにルーティングします。
+// すべてのリクエストをReactにルーティング
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
