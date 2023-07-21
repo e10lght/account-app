@@ -50,7 +50,6 @@ module.exports = {
         });
         return;
       }
-      console.log(password);
       if (!password) {
         res.status(401).json({
           message: 'パスワードを入力してください',

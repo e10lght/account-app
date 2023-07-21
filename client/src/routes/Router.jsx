@@ -9,7 +9,6 @@ import { SpendAddForm } from '../components/pagecomponents/SpendAddForm';
 
 export const Router = () => {
   const { user = {} } = useSelector((state) => state.login) || {};
-  console.log(user)
   return (
     <Routes>
       <Route path="/" element={<Login />} />

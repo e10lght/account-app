@@ -6,7 +6,11 @@ const Router = require('./routes/route');
 const path = require('path');
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  if(process.env.NODE_ENV === 'dev') {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'https://account-manage-app.herokuapp.com');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.headers.host) {
