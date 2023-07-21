@@ -35,7 +35,6 @@ export const Login = () => {
       const result = await dispatch(
         loginReducer({ email: email, password: password }),
       );
-      console.log(result.payload);
       const loginMessage = result.payload.message;
       if (result.payload.hasOwnProperty('user')) {
         setIsLogin(true);
@@ -44,7 +43,6 @@ export const Login = () => {
       } else {
         setMessage(loginMessage);
       }
-      console.log(result.payload.message);
     } catch (error) {
       setMessage('ログインできませんでした');
     }

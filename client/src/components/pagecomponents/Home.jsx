@@ -46,7 +46,6 @@ export const Home = memo(() => {
   const { spend = {} } = useSelector((state) => state.spend) || {};
 
   const { user = {} } = useSelector((state) => state.login) || {};
-  console.log(user)
 
   const {
     register,
